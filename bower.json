@@ -1,0 +1,23 @@
+{
+  "name": "gplates-latlong",
+  "version": "0.1.0",
+  "description": "Web Component for paleo lat long reprojection using Polymer",
+  "authors": [
+    "Douglas Fils Oceanleandership.org"
+  ],
+  "license": "MIT",
+  "main": "dist/gplates-latlong.html",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "paleoreprojection"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.2.4"
+  }
+}

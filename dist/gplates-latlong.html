@@ -1,0 +1,78 @@
+<!-- Import Polymer -->
+<link rel="import" href="../../polymer/polymer.html">
+
+<!-- Define your custom element -->
+<polymer-element name="gplates-latlong" attributes="lat lng age">
+
+    <template>
+        <div>
+            <p>DEBUG printout of JSON (remove for use): {{jsonunformatted}}</p>
+            <iframe frameborder="0" seamless width="1000" height="640" src="http://gplates.gps.caltech.edu:8080/reconstruct_feature_collection/?feature_collection={{json}}&geologicage={{age}}&output=gmtmap&coastlines=True"></iframe>
+            </p>
+        </div>
+    </template>
+
+    <script src="./mustache.js"></script>
+
+    <script>
+    Polymer('gplates-latlong', {
+
+        ready: function() {
+
+            var template = "{  \
+                    \"type\": \"FeatureCollection\",   \
+                    \"features\":   \
+                      [  \
+                        {  \
+                        \"type\": \"Feature\",   \
+                        \"geometry\": {\"type\": \"MultiPoint\", \"coordinates\": [{{LATLNG}}]},   \
+                        \"properties\":   \
+                          {  \
+                            \"name\": \"test_feature0\",   \
+                            \"feature_type\": \"gpml:UnclassifiedFeature\",   \
+                            \"begin_age\": \"{{AGE}}\",   \
+                            \"end_age\": \"0.0\"  \
+                          }  \
+                        }  \
+                      ]  \
+                    }"
+
+            // In javascript we loop over the lat and long in order to make a latlong pair that we can pass
+            // to the mustach templates (since they can perform no logic, which is as it should be)
+            //var latlong = 
+            var lats = this.lat.split(",");
+            var lngs = this.lng.split(",");
+            console.log(lats);
+            console.log(lngs);
+            // check to make sure the lats and longs are the same length?
+
+            var latlongpairsstring = "";
+            var length = lats.length;
+
+            for (i=0; i < lats.length ; i++) {
+                var latlngstring = "[" + lats[i] +"," + lngs[i] +"]"
+                latlongpairsstring += latlngstring;
+                // if more in loop, put a comma
+                if (i+1 < length) {
+                  latlongpairsstring += ", ";
+                } 
+            }
+
+            console.log(latlongpairsstring);
+
+            var filledTemplate = Mustache.render(template, {
+                //LAT: this.lat,
+                //LNG: this.lng,
+                LATLNG: latlongpairsstring,
+                AGE: this.age
+            })
+
+            this.json = filledTemplate.replace(/\"/gi, "%22")
+            this.jsonunformatted = filledTemplate
+
+        }
+
+    });
+    </script>
+
+</polymer-element>
